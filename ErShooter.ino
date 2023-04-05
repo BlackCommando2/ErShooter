@@ -1,13 +1,13 @@
 #include <Motor.h>
 #include<EspNow.h>
 
-Motor rightMotor(10, 8);
-Motor leftMotor(10, 8);
+Motor rightMotor(32,33);
+Motor leftMotor(26,27);
 
 Peer remote;
 JSONVar feedback;
 int currentPwm = 0,pwmChange = 10;
-int pneumaticPin = 32; 
+int pneumaticPin = 13; 
 void setup()
 {
     Serial.begin(115200);
