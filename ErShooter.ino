@@ -3,27 +3,32 @@
 
 Motor rightMotor(32,33);
 Motor leftMotor(26,27);
-
+Peer dataShooter;
 Peer remote;
 JSONVar feedback;
-int currentPwm = 0,pwmChange = 10;
+JSONVar datafeed;
+int currentPwm = 0,pwmChange = 5;
 int pneumaticPin = 13; 
-int moveMsg;
 bool pOpen = true;
+static long start = 0;
 void setup()
 {
     Serial.begin(115200);
     pinMode(13,OUTPUT);
     setId("EShoo");
     remote.init("TenZZ");
+    dataShooter.init("DATAZ");
     remote.setOnRecieve(poleOne,"pOne");
     remote.setOnRecieve(poleTwo,"pTwo");
     remote.setOnRecieve(poleThree,"pThr");
     remote.setOnRecieve(incPwm,"up");
     remote.setOnRecieve(decPwm,"down");
     remote.setOnRecieve(resetAll,"shRst");
-    remote.setOnRecieve(pneumaticMove,"pMOVE");
+    remote.setOnRecieve(pneumaticMove,"MOVp");
 //    remote.setOnRecieve(pneumaticClose,"pClose");
+      leftMotor.invertDirection();
+      rightMotor.invertDirection();
+
 }
 
 void loop()
@@ -39,6 +44,9 @@ void incPwm(JSONVar msg)
     leftMotor.setPWM(currentPwm);
     Serial.println(JSON.stringify(msg));
     Serial.println("CurrentPWM: " +String(currentPwm));
+    datafeed["type"]="cpwm";
+    datafeed["curr"]=currentPwm;
+    dataShooter.send(datafeed);
 }
 
 void decPwm(JSONVar msg)
@@ -49,6 +57,9 @@ void decPwm(JSONVar msg)
     leftMotor.setPWM(currentPwm);
     Serial.println(JSON.stringify(msg));
     Serial.println("CurrentPWM: " +String(currentPwm));
+    datafeed["type"]="cpwm";
+    datafeed["curr"]=currentPwm;
+    dataShooter.send(datafeed);
 }
 
 void poleOne(JSONVar msg)
@@ -58,6 +69,9 @@ void poleOne(JSONVar msg)
     leftMotor.setPWM(currentPwm);
     Serial.println(JSON.stringify(msg));
     Serial.println("CurrentPWM: " +String(currentPwm));
+    datafeed["type"]="cpwm";
+    datafeed["curr"]=currentPwm;
+    dataShooter.send(datafeed);
 }
 void poleTwo(JSONVar msg)
 {
@@ -66,6 +80,9 @@ void poleTwo(JSONVar msg)
     leftMotor.setPWM(currentPwm);
     Serial.println(JSON.stringify(msg));
     Serial.println("CurrentPWM: " +String(currentPwm));
+    datafeed["type"]="cpwm";
+    datafeed["curr"]=currentPwm;
+    dataShooter.send(datafeed);
 }
 void poleThree(JSONVar msg)
 {
@@ -74,6 +91,9 @@ void poleThree(JSONVar msg)
     leftMotor.setPWM(currentPwm);
     Serial.println(JSON.stringify(msg));
     Serial.println("CurrentPWM: " +String(currentPwm));
+    datafeed["type"]="cpwm";
+    datafeed["curr"]=currentPwm;
+    dataShooter.send(datafeed);
 }
 
 void resetAll(JSONVar msg)
@@ -83,22 +103,35 @@ void resetAll(JSONVar msg)
     leftMotor.setPWM(currentPwm);
     Serial.println(JSON.stringify(msg));
     Serial.println("CurrentPWM: " +String(currentPwm));
+    datafeed["type"]="cpwm";
+    datafeed["curr"]=currentPwm;
+    dataShooter.send(datafeed);
 }
 
 void pneumaticMove(JSONVar msg)
 {
-  if (pOpen)
-  {
-    digitalWrite(13, HIGH);
-    Serial.println("close");
-    pOpen = false;
-  }
-  else if (!pOpen)
-  {
-    digitalWrite(13, LOW);
-    Serial.println("open");
-    pOpen = true;
-  }
+//  if (pOpen)
+//  {
+//    digitalWrite(13, HIGH);
+//    Serial.println("close");
+//    pOpen = false;
+//  }
+//  else if (!pOpen)
+//  {
+//    digitalWrite(13, LOW);
+//    Serial.println("open");
+//    pOpen = true;
+//  }
+    start=millis();
+    while(millis()-start<1000)
+    {
+      digitalWrite(13, HIGH);
+      Serial.println("close");
+    }
+    digitalWrite(13,LOW);
+    datafeed["type"]="pneu";
+    datafeed["move"]="pmove";
+    
 }
 //void pneumaticOpen(JSONVar msg)
 //{
