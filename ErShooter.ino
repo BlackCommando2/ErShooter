@@ -8,10 +8,12 @@ Peer remote;
 JSONVar feedback;
 int currentPwm = 0,pwmChange = 10;
 int pneumaticPin = 13; 
+int moveMsg;
+bool pOpen = true;
 void setup()
 {
     Serial.begin(115200);
-    pinMode(pneumaticPin,OUTPUT);
+    pinMode(13,OUTPUT);
     setId("EShoo");
     remote.init("TenZZ");
     remote.setOnRecieve(poleOne,"pOne");
@@ -20,8 +22,8 @@ void setup()
     remote.setOnRecieve(incPwm,"up");
     remote.setOnRecieve(decPwm,"down");
     remote.setOnRecieve(resetAll,"shRst");
-    remote.setOnRecieve(pneumaticOpen,"pOpen");
-    remote.setOnRecieve(pneumaticClose,"pClose");
+    remote.setOnRecieve(pneumaticMove,"pMOVE");
+//    remote.setOnRecieve(pneumaticClose,"pClose");
 }
 
 void loop()
@@ -83,14 +85,29 @@ void resetAll(JSONVar msg)
     Serial.println("CurrentPWM: " +String(currentPwm));
 }
 
-void pneumaticOpen(JSONVar msg)
+void pneumaticMove(JSONVar msg)
 {
-    digitalWrite(pneumaticPin,HIGH);
-    Serial.println(JSON.stringify(msg));
+  if (pOpen)
+  {
+    digitalWrite(13, HIGH);
+    Serial.println("close");
+    pOpen = false;
+  }
+  else if (!pOpen)
+  {
+    digitalWrite(13, LOW);
+    Serial.println("open");
+    pOpen = true;
+  }
 }
-
-void pneumaticClose(JSONVar msg)
-{
-    digitalWrite(pneumaticPin,LOW);
-    Serial.println(JSON.stringify(msg));
-}
+//void pneumaticOpen(JSONVar msg)
+//{
+//    digitalWrite(pneumaticPin,HIGH);
+//    Serial.println(JSON.stringify(msg));
+//}
+//
+//void pneumaticClose(JSONVar msg)
+//{
+//    digitalWrite(pneumaticPin,LOW);
+//    Serial.println(JSON.stringify(msg));
+//}
