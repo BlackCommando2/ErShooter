@@ -123,7 +123,7 @@ void pneumaticMove(JSONVar msg)
 //    pOpen = true;
 //  }
     start=millis();
-    while(millis()-start<1000)
+    while(millis()-start<500)
     {
       digitalWrite(13, HIGH);
       Serial.println("close");
