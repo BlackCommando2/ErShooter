@@ -7,7 +7,7 @@ Peer dataShooter;
 Peer remote;
 JSONVar feedback;
 JSONVar datafeed;
-int currentPwm = 0, pwmChange = 5;
+int currentPwm = 0, pwmChange = 1;
 int pneumaticPin = 13;
 bool pOpen = true;
 static long start = 0;
@@ -65,7 +65,7 @@ void decPwm(JSONVar msg)
 
 void poleOne(JSONVar msg)
 {
-  currentPwm = 72;
+  currentPwm = 65;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -76,7 +76,7 @@ void poleOne(JSONVar msg)
 }
 void poleOneFar(JSONVar msg)
 {
-  currentPwm = 117;
+  currentPwm = 90;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -87,7 +87,7 @@ void poleOneFar(JSONVar msg)
 }
 void poleTwo(JSONVar msg)
 {
-  currentPwm = 125;
+  currentPwm = 120;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -98,7 +98,7 @@ void poleTwo(JSONVar msg)
 }
 void poleThree(JSONVar msg)
 {
-  currentPwm = 255;
+  currentPwm = 150;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
