@@ -7,7 +7,7 @@ Peer dataShooter;
 Peer remote;
 JSONVar feedback;
 JSONVar datafeed;
-int currentPwm = 0, pwmChange = 5;
+int currentPwm = 0, pwmChange = 1;
 int pneumaticPin = 13;
 bool pOpen = true;
 static long start = 0;
@@ -15,6 +15,7 @@ void setup()
 {
   Serial.begin(115200);
   pinMode(13, OUTPUT);
+  pinMode(4,OUTPUT);
   setId("EShoo");
   remote.init("TenZZ");
   dataShooter.init("DATAZ");
@@ -26,7 +27,8 @@ void setup()
   remote.setOnRecieve(decPwm, "down");
   remote.setOnRecieve(resetAll, "shRst");
   remote.setOnRecieve(pneumaticMove, "MOVp");
-  //    remote.setOnRecieve(pneumaticClose,"pClose");
+  remote.setOnRecieve(pneumaticClose,"pClos");
+  remote.setOnRecieve(pneumaticOpen,"pOp");
   leftMotor.invertDirection();
   rightMotor.invertDirection();
 
@@ -65,7 +67,7 @@ void decPwm(JSONVar msg)
 
 void poleOne(JSONVar msg)
 {
-  currentPwm = 72;
+  currentPwm = 65;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -76,7 +78,7 @@ void poleOne(JSONVar msg)
 }
 void poleOneFar(JSONVar msg)
 {
-  currentPwm = 117;
+  currentPwm = 90;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -87,7 +89,7 @@ void poleOneFar(JSONVar msg)
 }
 void poleTwo(JSONVar msg)
 {
-  currentPwm = 125;
+  currentPwm = 120;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -98,7 +100,7 @@ void poleTwo(JSONVar msg)
 }
 void poleThree(JSONVar msg)
 {
-  currentPwm = 255;
+  currentPwm = 150;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -145,14 +147,14 @@ void pneumaticMove(JSONVar msg)
   datafeed["move"] = "pmove";
 
 }
-//void pneumaticOpen(JSONVar msg)
-//{
-//    digitalWrite(pneumaticPin,HIGH);
-//    Serial.println(JSON.stringify(msg));
-//}
-//
-//void pneumaticClose(JSONVar msg)
-//{
-//    digitalWrite(pneumaticPin,LOW);
-//    Serial.println(JSON.stringify(msg));
-//}
+void pneumaticOpen(JSONVar msg)
+{
+    digitalWrite(4,HIGH);
+    Serial.println(JSON.stringify(msg));
+}
+
+void pneumaticClose(JSONVar msg)
+{
+    digitalWrite(4,LOW);
+    Serial.println(JSON.stringify(msg));
+}
