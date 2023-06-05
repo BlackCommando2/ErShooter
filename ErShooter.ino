@@ -15,6 +15,7 @@ void setup()
 {
   Serial.begin(115200);
   pinMode(13, OUTPUT);
+  pinMode(4,OUTPUT);
   setId("EShoo");
   remote.init("TenZZ");
   dataShooter.init("DATAZ");
@@ -26,7 +27,8 @@ void setup()
   remote.setOnRecieve(decPwm, "down");
   remote.setOnRecieve(resetAll, "shRst");
   remote.setOnRecieve(pneumaticMove, "MOVp");
-  //    remote.setOnRecieve(pneumaticClose,"pClose");
+  remote.setOnRecieve(pneumaticClose,"pClos");
+  remote.setOnRecieve(pneumaticOpen,"pOp");
   leftMotor.invertDirection();
   rightMotor.invertDirection();
 
@@ -145,14 +147,14 @@ void pneumaticMove(JSONVar msg)
   datafeed["move"] = "pmove";
 
 }
-//void pneumaticOpen(JSONVar msg)
-//{
-//    digitalWrite(pneumaticPin,HIGH);
-//    Serial.println(JSON.stringify(msg));
-//}
-//
-//void pneumaticClose(JSONVar msg)
-//{
-//    digitalWrite(pneumaticPin,LOW);
-//    Serial.println(JSON.stringify(msg));
-//}
+void pneumaticOpen(JSONVar msg)
+{
+    digitalWrite(4,HIGH);
+    Serial.println(JSON.stringify(msg));
+}
+
+void pneumaticClose(JSONVar msg)
+{
+    digitalWrite(4,LOW);
+    Serial.println(JSON.stringify(msg));
+}
