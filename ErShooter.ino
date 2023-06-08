@@ -9,13 +9,13 @@ JSONVar feedback;
 JSONVar datafeed;
 int currentPwm = 0, pwmChange = 1;
 int pneumaticPin = 13;
-bool pOpen = true;
+bool pOpen = true, shoot=false;
 static long start = 0;
 void setup()
 {
   Serial.begin(115200);
   pinMode(13, OUTPUT);
-  pinMode(4,OUTPUT);
+  pinMode(4, OUTPUT);
   setId("EShoo");
   remote.init("TenZZ");
   dataShooter.init("DATAZ");
@@ -27,8 +27,8 @@ void setup()
   remote.setOnRecieve(decPwm, "down");
   remote.setOnRecieve(resetAll, "shRst");
   remote.setOnRecieve(pneumaticMove, "MOVp");
-  remote.setOnRecieve(pneumaticClose,"pClos");
-  remote.setOnRecieve(pneumaticOpen,"pOp");
+  remote.setOnRecieve(pneumaticClose, "pClos");
+  remote.setOnRecieve(pneumaticOpen, "pOp");
   leftMotor.invertDirection();
   rightMotor.invertDirection();
 
@@ -36,6 +36,17 @@ void setup()
 
 void loop()
 {
+  if (shoot)
+  {
+    start = millis();
+    while (millis() - start < 500)
+    {
+      digitalWrite(13, HIGH);
+      Serial.println("close");
+    }
+    digitalWrite(13, LOW);
+    shoot=false;
+  }
 
 }
 
@@ -67,7 +78,7 @@ void decPwm(JSONVar msg)
 
 void poleOne(JSONVar msg)
 {
-  currentPwm = 65;
+  currentPwm = 55;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -89,7 +100,7 @@ void poleOneFar(JSONVar msg)
 }
 void poleTwo(JSONVar msg)
 {
-  currentPwm = 120;
+  currentPwm = 70;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -100,7 +111,7 @@ void poleTwo(JSONVar msg)
 }
 void poleThree(JSONVar msg)
 {
-  currentPwm = 150;
+  currentPwm = 105;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -124,37 +135,19 @@ void resetAll(JSONVar msg)
 
 void pneumaticMove(JSONVar msg)
 {
-  //  if (pOpen)
-  //  {
-  //    digitalWrite(13, HIGH);
-  //    Serial.println("close");
-  //    pOpen = false;
-  //  }
-  //  else if (!pOpen)
-  //  {
-  //    digitalWrite(13, LOW);
-  //    Serial.println("open");
-  //    pOpen = true;
-  //  }
-  start = millis();
-  while (millis() - start < 500)
-  {
-    digitalWrite(13, HIGH);
-    Serial.println("close");
-  }
-  digitalWrite(13, LOW);
+  shoot = true;
   datafeed["type"] = "pneu";
   datafeed["move"] = "pmove";
 
 }
 void pneumaticOpen(JSONVar msg)
 {
-    digitalWrite(4,HIGH);
-    Serial.println(JSON.stringify(msg));
+  digitalWrite(4, HIGH);
+  Serial.println(JSON.stringify(msg));
 }
 
 void pneumaticClose(JSONVar msg)
 {
-    digitalWrite(4,LOW);
-    Serial.println(JSON.stringify(msg));
+  digitalWrite(4, LOW);
+  Serial.println(JSON.stringify(msg));
 }
