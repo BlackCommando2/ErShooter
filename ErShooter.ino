@@ -111,7 +111,7 @@ void poleTwo(JSONVar msg)
 }
 void poleThree(JSONVar msg)
 {
-  currentPwm = 95;
+  currentPwm = 90;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
