@@ -20,7 +20,7 @@ void setup()
   remote.init("TenZZ");
   dataShooter.init("DATAZ");
   remote.setOnRecieve(poleOne, "pOne");
-  remote.setOnRecieve(poleTwoFar, "pTwF");
+//  remote.setOnRecieve(poleTwoFar, "pTwF");
   remote.setOnRecieve(poleTwo, "pTwo");
   remote.setOnRecieve(poleThree, "pThr");
   remote.setOnRecieve(incPwm, "up");
@@ -79,7 +79,7 @@ void decPwm(JSONVar msg)
 
 void poleOne(JSONVar msg)
 {
-  currentPwm = 55;
+  currentPwm = 70;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -88,19 +88,20 @@ void poleOne(JSONVar msg)
   datafeed["curr"] = currentPwm;
   dataShooter.send(datafeed);
 }
-void poleTwoFar(JSONVar msg)
-{
-  currentPwm = 90;
-  rightMotor.setPWM(currentPwm);
-  leftMotor.setPWM(currentPwm);
-  Serial.println(JSON.stringify(msg));
-  Serial.println("CurrentPWM: " + String(currentPwm));
-  datafeed["type"] = "cpwm";
-  datafeed["curr"] = currentPwm;
-  dataShooter.send(datafeed);
-}
+//void poleTwoFar(JSONVar msg)
+//{
+//  currentPwm = 110;
+//  rightMotor.setPWM(currentPwm);
+//  leftMotor.setPWM(currentPwm);
+//  Serial.println(JSON.stringify(msg));
+//  Serial.println("CurrentPWM: " + String(currentPwm));
+//  datafeed["type"] = "cpwm";
+//  datafeed["curr"] = currentPwm;
+//  dataShooter.send(datafeed);
+//}
 void poleTwo(JSONVar msg)
 {
+  currentPwm = 87;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
@@ -111,7 +112,7 @@ void poleTwo(JSONVar msg)
 }
 void poleThree(JSONVar msg)
 {
-  currentPwm = 90;
+  currentPwm = 105;
   rightMotor.setPWM(currentPwm);
   leftMotor.setPWM(currentPwm);
   Serial.println(JSON.stringify(msg));
